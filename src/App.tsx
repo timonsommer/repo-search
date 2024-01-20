@@ -1,23 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import { fetchRepos } from './services/queries';
+import { Status } from './types/Status';
 
 function App() {
+  const [alert, setAlert] = useState<string>("");
+  const [username, setUsername] = useState<string>("timonso");
+
+  useEffect(() => {
+    fetchRepos(username).then((data) => {
+      if (data.status !== Status.SUCCESS) {
+        setAlert(data.status);
+      }
+      console.log(data);
+    });
+  },
+    [username]);
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );
