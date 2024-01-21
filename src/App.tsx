@@ -8,9 +8,7 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <RepoFilter _username={username}/>
-      </header>
+      <RepoFilter _username={username}/>
     </div>
   );
 }
