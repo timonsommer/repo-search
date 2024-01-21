@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './App.scss';
-import { fetchRepos } from './services/queries';
-import { Status } from './types/Status';
 import RepoList from './components/RepoFilter';
 
 function App() {
   const [alert, setAlert] = useState<string>("");
   const [username, setUsername] = useState<string>("timonso");
-  
+
   return (
     <div className="App">
       <header className="App-header">
