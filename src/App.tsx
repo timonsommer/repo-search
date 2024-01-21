@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.scss';
-import RepoList from './components/RepoFilter';
+import RepoFilter from './components/RepoFilter';
 
 function App() {
   const [alert, setAlert] = useState<string>("");
@@ -9,9 +9,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        GitHub Repository Search
+        <RepoFilter _username={username}/>
       </header>
-      <RepoList _username={username} />
     </div>
   );
 }

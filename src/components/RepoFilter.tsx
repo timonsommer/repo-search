@@ -25,7 +25,7 @@ type Filter = {
     repoName: string
 }
 
-function RepoList({ _username }: RepoListProps) {
+function RepoFilter({ _username }: RepoListProps) {
     const anyLang: LanguageOption = ["any", "Any"];
     const defaultFilter = { languageId: anyLang[0], repoName: "" };
 
@@ -36,11 +36,15 @@ function RepoList({ _username }: RepoListProps) {
     const [allLanguages, setAllLanguages] = useState<LanguageOption[]>([anyLang]);
 
     const filterRepos = (repositories: Repository[], { languageId: language, repoName: name }: Filter): Repository[] => {
-        return repositories.filter((repo) => repo.name.includes(name) && (language === anyLang[0] || repo.languages.includes(language)));
+        return repositories.filter((repo) => (
+            repo.name.toLowerCase().includes(name.toLowerCase()) &&
+            (language === anyLang[0] || repo.languages.includes(language))
+        ));
     }
 
     useEffect(() => {
         fetchRepos(_username).then((response) => {
+            console.log(response);
             if (response.data && response.status === Status.SUCCESS) {
                 setItemCount(response.data.user.repositories.totalCount);
                 const edges = response.data.user.repositories.edges;
@@ -54,12 +58,12 @@ function RepoList({ _username }: RepoListProps) {
                 });
                 setAllLanguages(allLanguages.concat(Array.from(_allLanguages).sort((a, b) => a[1].localeCompare(b[1]))));
                 setRepositories(filterRepos(_repositories, filter));
+                console.log(repositories);
             } else {
                 setAlert(response.status.toString());
             }
-            console.log(response);
-            console.log(repositories);
         });
+        // console.log(repositories);
         return () => {
             setAllLanguages([anyLang]);
             setRepositories([]);
@@ -74,8 +78,9 @@ function RepoList({ _username }: RepoListProps) {
 
     return (
         <div className="card-list">
+            {repositories.toString()}
         </div>
     );
 }
 
-export default RepoList;
+export default RepoFilter;
