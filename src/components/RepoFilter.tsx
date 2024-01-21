@@ -1,31 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { fetchRepos } from '../services/queries';
 import { Status } from '../types/Status';
+import { LanguageOption, Repository, Filter, Language } from '../types/repositoryData';
+import RepoList from './RepoList';
 
-type RepoListProps = {
+type RepoFilterProps = {
     _username: string
 }
 
-type Repository = {
-    id: string,
-    name: string,
-    languages: Language[],
-    url: string
-}
-
-type LanguageOption = [
-    id: Language,
-    name: string
-]
-
-type Language = string;
-
-type Filter = {
-    languageId: Language,
-    repoName: string
-}
-
-function RepoFilter({ _username }: RepoListProps) {
+function RepoFilter({ _username }: RepoFilterProps) {
     const anyLang: LanguageOption = ["any", "Any"];
     const defaultFilter = { languageId: anyLang[0], repoName: "" };
 
@@ -48,7 +31,7 @@ function RepoFilter({ _username }: RepoListProps) {
             if (response.data && response.status === Status.SUCCESS) {
                 setItemCount(response.data.user.repositories.totalCount);
                 const edges = response.data.user.repositories.edges;
-                const _allLanguages: Map<string, Language> = new Map([anyLang]);
+                const _allLanguages: Map<string, Language> = new Map();
                 const _repositories: Repository[] = edges.map((edge) => edge.node).map((node) => {
                     const _languages: Language[] = node.languages.edges.map((edge) => {
                         if (!_allLanguages.has(edge.node.id)) _allLanguages.set(edge.node.id, edge.node.name);
@@ -58,12 +41,10 @@ function RepoFilter({ _username }: RepoListProps) {
                 });
                 setAllLanguages(allLanguages.concat(Array.from(_allLanguages).sort((a, b) => a[1].localeCompare(b[1]))));
                 setRepositories(filterRepos(_repositories, filter));
-                console.log(repositories);
             } else {
                 setAlert(response.status.toString());
             }
         });
-        // console.log(repositories);
         return () => {
             setAllLanguages([anyLang]);
             setRepositories([]);
@@ -77,8 +58,8 @@ function RepoFilter({ _username }: RepoListProps) {
     }, [filter]);
 
     return (
-        <div className="card-list">
-            {repositories.toString()}
+        <div className="repo-filter">
+            <RepoList _repositories={repositories} />
         </div>
     );
 }
