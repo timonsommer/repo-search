@@ -1,26 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import './App.css';
+import './App.scss';
 import { fetchRepos } from './services/queries';
 import { Status } from './types/Status';
+import RepoList from './components/RepoFilter';
 
 function App() {
   const [alert, setAlert] = useState<string>("");
   const [username, setUsername] = useState<string>("timonso");
-
-  useEffect(() => {
-    fetchRepos(username).then((data) => {
-      if (data.status !== Status.SUCCESS) {
-        setAlert(data.status);
-      }
-      console.log(data);
-    });
-  },
-    [username]);
-
+  
   return (
     <div className="App">
       <header className="App-header">
+        GitHub Repository Search
       </header>
+      <RepoList _username={username} />
     </div>
   );
 }

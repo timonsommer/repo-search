@@ -27,6 +27,7 @@ export async function fetchRepos(username: string, lastItem?: string): Promise<R
         edges {
           cursor
           node {
+            id
             name
             url
             languages(first: 10) {

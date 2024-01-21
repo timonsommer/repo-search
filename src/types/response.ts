@@ -1,12 +1,13 @@
-import { Alert } from "./Status";
+import { Status } from "./Status";
 
 export type ResponseData = {
-  user?: {
+  user: {
     repositories: {
       totalCount: number,
       edges: {
         cursor: string,
         node: {
+          id: string,
           name: string,
           url: string,
           languages: {
@@ -17,14 +18,14 @@ export type ResponseData = {
               }
             }[],
           }
-        }[],
+        },
         pageInfo: {
           endCursor: string,
           hasNextPage: boolean,
         }
-      },
+      }[],
     }
   }
 }
 
-export type ResponseResult = { status: Alert, data?: ResponseData }
+export type ResponseResult = { status: Status, data?: ResponseData }
