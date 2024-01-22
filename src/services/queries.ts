@@ -1,14 +1,20 @@
-import { GraphqlResponseError, graphql } from "@octokit/graphql";
+import { GraphqlResponseError } from "@octokit/graphql";
 import type { ResponseData, ResponseResult } from "../types/response";
 import { Status } from "../types/Status";
+import { paginateGraphql } from "@octokit/plugin-paginate-graphql";
+import { Octokit } from "@octokit/core";
 
-const ENTRIES_PER_PAGE = 100;
+const ENTRIES_PER_QUERY = 100;
 
-const authQuery = graphql.defaults({
-  headers: {
-    authorization: `bearer ${process.env.REACT_APP_GH_TOKEN}`,
-  },
-});
+// const authQuery = graphql.defaults({
+//   headers: {
+//     authorization: `bearer ${process.env.REACT_APP_GH_TOKEN}`,
+//   },
+// });
+
+const AuthQuery = Octokit.plugin(paginateGraphql);
+const authQuery = new AuthQuery({ auth: `bearer ${process.env.REACT_APP_GH_TOKEN}` });
+
 
 /**
  * Attempts to fetch all public repositories owned by the provided user.
@@ -19,10 +25,10 @@ const authQuery = graphql.defaults({
  * @return {Promise<ResponseResult>} Contains a status code and, if the query was successful, the requested respositories.
  */
 export async function fetchRepos(username: string, lastItem?: string): Promise<ResponseResult> {
-  const query = {
-    query: `query fetchRepos($_username: String!, $_entriesPerPage: Int!, $_lastItem: String) {
+  const query =
+    `query fetchRepos($_username: String!, $_entriesPerPage: Int!, $cursor: String) {
     user(login: $_username) {
-      repositories(first: $_entriesPerPage, after: $_lastItem) {
+      repositories(first: $_entriesPerPage, after: $cursor) {
         edges {
           cursor
           node {
@@ -45,14 +51,15 @@ export async function fetchRepos(username: string, lastItem?: string): Promise<R
         }
       }
     }
-  }`,
+  }`
+  
+  const params = {
     _username: username,
-    _entriesPerPage: ENTRIES_PER_PAGE,
-    _lastItem: lastItem,
+    _entriesPerPage: ENTRIES_PER_QUERY,
   };
 
   try {
-    const response: ResponseData = await authQuery(query);
+    const response: ResponseData = await authQuery.graphql.paginate(query, params);
 
     if (response.user && response.user.repositories.edges.length === 0) {
       return { status: Status.NO_ENTRIES };

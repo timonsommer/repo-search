@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@octokit/core": "^5.1.0",
     "@octokit/graphql": "^7.0.2",
+    "@octokit/plugin-paginate-graphql": "^4.0.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
