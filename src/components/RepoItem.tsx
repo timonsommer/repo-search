@@ -1,6 +1,3 @@
-import { Repository } from "../types/repositoryData";
-
-
 type RepoItemProps = {
     _repoName: string,
     _repoLanguages: string[],

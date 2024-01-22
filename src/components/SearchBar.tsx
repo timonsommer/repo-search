@@ -1,15 +1,17 @@
-import { useContext, ChangeEvent, useEffect } from "react";
+import { useContext, ChangeEvent } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { useDebouncedCallback } from "use-debounce";
 
 function SearchBar() {
     const { setUsername } = useContext(UserContext);
 
-    function handleInput(e: ChangeEvent<HTMLInputElement>): void {
+    const handleInput = useDebouncedCallback((e: ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value);
-    }
+    }, 400);
+
     return (
         <div className="search-bar">
-            <input className="search-bar__input" type="text" placeholder="Enter username..." onChange={(event) => handleInput(event)} />
+            <input className="search-bar__input" type="text" placeholder="Enter username..." onChange={(e) => handleInput(e)} />
         </div>
     );
 
