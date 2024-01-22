@@ -13,7 +13,7 @@ function RepoItem({ _repoName, _repoLanguages, _repoURL }: RepoItemProps) {
     return (
         <div className="repo-item">
             <div>
-                {_repoName}
+                <a className="repo-item__link" target="new" href={_repoURL}>{_repoName}</a>
             </div>
         </div>
     );

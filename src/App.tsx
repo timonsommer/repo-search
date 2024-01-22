@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+
 import './App.scss';
 import RepoFilter from './components/RepoFilter';
+import { UserContextProvider } from './contexts/UserContext';
+import SearchBar from './components/SearchBar';
 
 function App() {
-  const [alert, setAlert] = useState<string>("");
-  const [username, setUsername] = useState<string>("timonso");
-
   return (
-    <div className="App">
-      <RepoFilter _username={username}/>
+    <div className="app">
+      <UserContextProvider>
+        <SearchBar />
+        <RepoFilter />
+      </UserContextProvider>
     </div>
   );
 }

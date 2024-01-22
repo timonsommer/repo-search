@@ -3,7 +3,6 @@ import { Status } from "./Status";
 export type ResponseData = {
   user: {
     repositories: {
-      totalCount: number,
       edges: {
         cursor: string,
         node: {

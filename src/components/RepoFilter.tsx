@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { fetchRepos } from '../services/queries';
 import { Status } from '../types/Status';
 import { LanguageOption, Repository, Filter, Language } from '../types/repositoryData';
 import RepoList from './RepoList';
+import { UserContext } from '../contexts/UserContext';
 
-type RepoFilterProps = {
-    _username: string
-}
+const anyLang: LanguageOption = ["any", "Any"];
+const defaultFilter = { languageId: anyLang[0], repoName: "" };
 
-function RepoFilter({ _username }: RepoFilterProps) {
-    const anyLang: LanguageOption = ["any", "Any"];
-    const defaultFilter = { languageId: anyLang[0], repoName: "" };
-
+function RepoFilter() {
+    const {username} = useContext(UserContext);
+    
     const [alert, setAlert] = useState<string>("");
     const [repositories, setRepositories] = useState<Repository[]>([]);
     const [itemCount, setItemCount] = useState<number>(0);
@@ -26,10 +25,9 @@ function RepoFilter({ _username }: RepoFilterProps) {
     }
 
     useEffect(() => {
-        fetchRepos(_username).then((response) => {
+        fetchRepos(username).then((response) => {
             console.log(response);
             if (response.data && response.status === Status.SUCCESS) {
-                setItemCount(response.data.user.repositories.totalCount);
                 const edges = response.data.user.repositories.edges;
                 const _allLanguages: Map<string, Language> = new Map();
                 const _repositories: Repository[] = edges.map((edge) => edge.node).map((node) => {
@@ -41,6 +39,7 @@ function RepoFilter({ _username }: RepoFilterProps) {
                 });
                 setAllLanguages(allLanguages.concat(Array.from(_allLanguages).sort((a, b) => a[1].localeCompare(b[1]))));
                 setRepositories(filterRepos(_repositories, filter));
+                setItemCount(repositories.length);
             } else {
                 setAlert(response.status.toString());
             }
@@ -50,10 +49,11 @@ function RepoFilter({ _username }: RepoFilterProps) {
             setRepositories([]);
         }
     },
-        []);
+        [username]);
 
     useEffect(() => {
         filterRepos(repositories, filter);
+        setItemCount(repositories.length);
         return () => setFilter(defaultFilter);
     }, [filter]);
 
