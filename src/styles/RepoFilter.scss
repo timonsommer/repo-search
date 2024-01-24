@@ -1,0 +1,41 @@
+@use "colors";
+@use "dimensions";
+
+.faded {
+    opacity: 0.4;
+}
+
+.repo-filter {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: dimensions.$radius-m;
+    border: dimensions.$border-inner solid colors.$border-outer;
+    overflow: hidden;
+    // padding: dimensions.$padding-l;
+
+    &__options {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        gap: calc(dimensions.$padding-s + 4px);
+        padding: dimensions.$padding-m;
+        background-color: colors.$bg-panel;
+        border-bottom: dimensions.$border-inner solid colors.$border-inner;
+
+        & &__name {
+            flex-grow: 0.7;
+        }
+
+        & &__lang {
+            flex-grow: 0.3;
+            appearance: none;
+        }
+
+        @media screen and (max-width: dimensions.$break-m) {
+            flex-direction: column;
+        }
+
+    }
+}

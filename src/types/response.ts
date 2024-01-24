@@ -1,7 +1,7 @@
 import { Status } from "./Status";
 
 export type ResponseData = {
-  user: {
+  repositoryOwner: {
     repositories: {
       totalCount: number
       edges: {
@@ -10,6 +10,7 @@ export type ResponseData = {
           id: string,
           name: string,
           url: string,
+          isFork: boolean,
           languages: {
             edges: {
               node: {

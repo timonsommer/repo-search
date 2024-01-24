@@ -27,7 +27,7 @@ const authQuery = new AuthQuery({ auth: `bearer ${process.env.REACT_APP_GH_TOKEN
 export async function fetchRepos(username: string, lastItem?: string): Promise<ResponseResult> {
   const query =
     `query fetchRepos($_username: String!, $_entriesPerPage: Int!, $cursor: String) {
-    user(login: $_username) {
+      repositoryOwner(login: $_username) {
       repositories(first: $_entriesPerPage, after: $cursor) {
         edges {
           cursor
@@ -35,6 +35,7 @@ export async function fetchRepos(username: string, lastItem?: string): Promise<R
             id
             name
             url
+            isFork
             languages(first: 10) {
               edges {
                 node {
@@ -52,7 +53,7 @@ export async function fetchRepos(username: string, lastItem?: string): Promise<R
       }
     }
   }`
-  
+
   const params = {
     _username: username,
     _entriesPerPage: ENTRIES_PER_QUERY,
@@ -61,7 +62,7 @@ export async function fetchRepos(username: string, lastItem?: string): Promise<R
   try {
     const response: ResponseData = await authQuery.graphql.paginate(query, params);
 
-    if (response.user && response.user.repositories.edges.length === 0) {
+    if (response.repositoryOwner && response.repositoryOwner.repositories.edges.length === 0) {
       return { status: Status.NO_ENTRIES };
     } else {
       return { status: Status.SUCCESS, data: response };

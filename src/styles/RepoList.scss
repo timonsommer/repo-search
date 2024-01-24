@@ -1,0 +1,20 @@
+@use "dimensions";
+@use "colors";
+
+.repo-list {
+    width: 100%;
+
+    &__no-data {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: dimensions.$padding-l;
+        border-bottom: dimensions.$border-inner solid colors.$border-inner;
+        font-style: italic;
+
+        & svg {
+            color: colors.$icon-stroke;
+            width: dimensions.$icon-size;
+        }
+    }
+}

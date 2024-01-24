@@ -1,0 +1,42 @@
+@use "colors";
+@use "dimensions";
+@use "fonts";
+
+* {
+    font-family: fonts.$default;
+    font-weight: fonts.$weight-default;
+    box-sizing: border-box;
+}
+
+html {
+    background-color: colors.$bg-page;
+}
+
+h2 {
+    font-weight: fonts.$weight-bold;
+    font-size: fonts.$size-xl;
+    margin: 0;
+}
+
+h3 {
+    font-weight: fonts.$weight-semibold;
+    font-size: fonts.$size-l;
+    margin: 0;
+}
+
+h4 {
+    font-weight: fonts.$default;
+    font-size: fonts.$size-m;
+    margin: 0;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    gap: dimensions.$padding-l;
+    align-items: center;
+    margin: auto;
+    padding: dimensions.$padding-m;
+    max-width: dimensions.$app-width-max;
+    min-width: dimensions.$app-width-min;
+}
