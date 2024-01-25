@@ -3,13 +3,13 @@ import { fetchRepos } from '../services/queries';
 import { Status } from '../types/Status';
 import { LanguageOption, Repository, Filter, Language } from '../types/repositoryData';
 import RepoList from './RepoList';
-import { UserContext } from '../contexts/UserContext';
 import { Filter as FilterIcon, Code as CodeIcon, ChevronDown as ChevronDownIcon, Loader as LoaderIcon, XSquare as XSquareIcon } from 'react-feather';
 import IconInput from './IconInput';
 import "../styles/RepoFilter.scss";
 import Pagination from './Pagination';
 import AlertBanner from './AlertBanner';
 import ListStatus from './ListStatus';
+import { ENTRIES_PER_PAGE } from '../services/queries';
 
 const anyLang: LanguageOption = ["any", "Any language"];
 const defaultFilter = { languageId: anyLang[0], repoName: "" };
@@ -24,6 +24,9 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
     const [filteredRepos, setFilteredRepos] = useState<Repository[] | null>(null);
     const [filter, setFilter] = useState<Filter>(defaultFilter);
     const [allLanguages, setAllLanguages] = useState<LanguageOption[]>([anyLang]);
+    const [page, setPage] = useState<number>(1);
+
+    const nextPage = () => setPage(page + 1);
 
     const filterRepos = (repositories: Repository[], { languageId: language, repoName: name }: Filter): Repository[] => {
         return repositories.filter((repo) => (
@@ -74,11 +77,15 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
             setRepositories([]);
             setAllLanguages([anyLang]);
             setFilter(defaultFilter);
+            setPage(1);
         }
     }, [userQuery]);
 
     useEffect(() => {
         setFilteredRepos(filterRepos(repositories, filter));
+        return () => {
+            setPage(1);
+        }
     }, [filter]);
 
     return (
@@ -99,8 +106,8 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
                     </div>
                     {!filteredRepos && <ListStatus statusText="Loading results..." icon={<LoaderIcon />} isSpinning />}
                     {filteredRepos && filteredRepos.length === 0 && <ListStatus statusText="No matching repositories found." icon={<XSquareIcon />} />}
-                    {filteredRepos && filteredRepos.length !== 0 && <RepoList repos={filteredRepos} />}
-                    <Pagination totalCount={filteredRepos?.length ?? 0} />
+                    {filteredRepos && filteredRepos.length !== 0 && <RepoList repos={filteredRepos.slice(0, ENTRIES_PER_PAGE * page)} />}
+                    <Pagination totalCount={filteredRepos?.length ?? 0} currentCount={Math.min(ENTRIES_PER_PAGE * page, filteredRepos?.length ?? 0)} loadMore={nextPage} />
                 </div>
         } </>
     );

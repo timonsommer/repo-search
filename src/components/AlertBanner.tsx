@@ -9,8 +9,8 @@ type AlertCardProps = {
 function AlertBanner({ alertType }: AlertCardProps) {
     return (
         <div className="alert-banner">
-            {[Status.NO_ENTRIES, Status.UNKNOWN_USER].includes(alertType) && <AlertOctagonIcon/>}
-            {[Status.GENERAL_ERROR, Status.QUERY_ERROR].includes(alertType) && <XOctagonIcon/>}
+            {[Status.NO_ENTRIES, Status.UNKNOWN_USER].includes(alertType) && <AlertOctagonIcon />}
+            {[Status.GENERAL_ERROR, Status.QUERY_ERROR].includes(alertType) && <XOctagonIcon />}
             {alertType.toString()}
         </div>
     );

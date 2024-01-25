@@ -1,14 +1,14 @@
 import { GraphqlResponseError } from "@octokit/graphql";
-import type { ResponseData, ResponseResult } from "../types/response";
+import { type ResponseData, type ResponseResult } from "../types/response";
 import { Status } from "../types/Status";
 import { paginateGraphql } from "@octokit/plugin-paginate-graphql";
 import { Octokit } from "@octokit/core";
 
 const ENTRIES_PER_QUERY = 100;
+export const ENTRIES_PER_PAGE = 10;
 
 const AuthQuery = Octokit.plugin(paginateGraphql);
 const authQuery = new AuthQuery({ auth: `bearer ${process.env.REACT_APP_GH_TOKEN}` });
-
 
 /**
  * Attempts to fetch all public repositories owned by the provided user.

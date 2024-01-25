@@ -4,12 +4,18 @@
 
 * {
     font-family: fonts.$default;
-    font-weight: fonts.$weight-default;
+    font-weight: fonts.$weight-regular;
+    font-size: fonts.$size-m;
     box-sizing: border-box;
 }
 
 html {
     background-color: colors.$bg-page;
+}
+
+p {
+    font-weight: fonts.$weight-regular;
+    margin: 0;
 }
 
 h2 {
@@ -27,6 +33,15 @@ h3 {
 svg {
     stroke-width: dimensions.$stroke-icon;
     color: colors.$stroke-icon;
+}
+
+li {
+    list-style: none;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
 }
 
 .app {
