@@ -2,7 +2,15 @@
 
 This application allows the user to view all repositories owned by a given GitHub username. Based on ReactJS, the front-end first fetches data for all qualifying repositories using GitHub's GraphQL API. The results can then be further refined through filtering by repository name and the used programming languages.
 
+### Important: GitHub Access Token required
+
+**For GitHub API queries to be processed correctly, any request needs to be authenticated using an Access Token. After generating a personal Access Token in your GitHub user settings, create an  `.env` file in the project where you provide the token as an environment value:**
+
+```
+REACT_APP_GH_TOKEN="< your personal access token >"
+```
 ## Available Scripts
+
 
 In the project directory, you can run:
 
