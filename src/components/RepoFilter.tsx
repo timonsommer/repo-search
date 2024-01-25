@@ -21,10 +21,11 @@ type RepoFilterProps = {
 function RepoFilter({ userQuery }: RepoFilterProps) {
     const [alert, setAlert] = useState<Status | null>(null);
     const [repositories, setRepositories] = useState<Repository[]>([]);
-    const [filteredRepos, setFilteredRepos] = useState<Repository[] | null>(null);
+    const [filteredRepos, setFilteredRepos] = useState<Repository[]>([]);
     const [filter, setFilter] = useState<Filter>(defaultFilter);
     const [allLanguages, setAllLanguages] = useState<LanguageOption[]>([anyLang]);
     const [page, setPage] = useState<number>(1);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const nextPage = () => setPage(page + 1);
 
@@ -44,7 +45,7 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
     };
 
     useEffect(() => {
-        let isSubscribed = true;
+        setIsLoading(true);
         fetchRepos(userQuery).then((response) => {
             console.log(response);
             if (response.data && response.status === Status.SUCCESS) {
@@ -59,27 +60,16 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
                         });
                         return { id: repo.id, name: repo.name, languages: _languages, url: repo.url, isFork: repo.isFork };
                     });
-                if (isSubscribed) {
                     setAllLanguages([anyLang].concat(Array.from(_allLanguages).sort((a, b) => a[1].localeCompare(b[1]))));
                     setRepositories(_repositories);
                     setFilteredRepos(filterRepos(_repositories, filter));
-                }
-            } else {
+                } else {
                 setAlert(response.status);
-                setFilteredRepos(null);
-            }
-        }
+                }   
+                setIsLoading(false);
+            }   
         );
-        return () => {
-            isSubscribed = false;
-            setAlert(null);
-            setFilteredRepos(null);
-            setRepositories([]);
-            setAllLanguages([anyLang]);
-            setFilter(defaultFilter);
-            setPage(1);
-        }
-    }, [userQuery]);
+    }, []);
 
     useEffect(() => {
         setFilteredRepos(filterRepos(repositories, filter));
@@ -92,7 +82,7 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
         <> {
             alert ? <AlertBanner alertType={alert} /> :
                 <div className="repo-filter">
-                    <div className={`repo-filter__options ${!filteredRepos ? "faded" : ""}`}>
+                    <div className={`repo-filter__options ${isLoading ? "faded" : ""}`}>
                         <IconInput className="repo-filter__options__name" leftIcon={<FilterIcon />}>
                             <input type="search" onChange={(e) => handleNameInput(e)} placeholder="Filter by repository name" />
                         </IconInput>
@@ -104,10 +94,10 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
                             </select>
                         </IconInput>
                     </div>
-                    {!filteredRepos && <ListStatus statusText="Loading results..." icon={<LoaderIcon />} isSpinning />}
-                    {filteredRepos && filteredRepos.length === 0 && <ListStatus statusText="No matching repositories found." icon={<XSquareIcon />} />}
-                    {filteredRepos && filteredRepos.length !== 0 && <RepoList repos={filteredRepos.slice(0, ENTRIES_PER_PAGE * page)} />}
-                    <Pagination totalCount={filteredRepos?.length ?? 0} currentCount={Math.min(ENTRIES_PER_PAGE * page, filteredRepos?.length ?? 0)} loadMore={nextPage} />
+                    {isLoading && <ListStatus statusText="Loading results..." icon={<LoaderIcon />} isSpinning />}
+                    {!isLoading && filteredRepos.length === 0 && <ListStatus statusText="No matching repositories found." icon={<XSquareIcon />} />}
+                    {!isLoading && filteredRepos.length !== 0 && <RepoList repos={filteredRepos.slice(0, ENTRIES_PER_PAGE * page)} />}
+                    <Pagination totalCount={filteredRepos.length} currentCount={Math.min(ENTRIES_PER_PAGE * page, filteredRepos.length)} loadMore={nextPage} />
                 </div>
         } </>
     );

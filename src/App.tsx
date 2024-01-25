@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="app">
       <SearchBar />
-      {username && <RepoFilter userQuery={username}/>}
+      {username && <RepoFilter key={username} userQuery={username}/>}
     </div>
   );
 }
