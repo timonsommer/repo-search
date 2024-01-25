@@ -6,15 +6,8 @@ import { Octokit } from "@octokit/core";
 
 const ENTRIES_PER_QUERY = 100;
 
-// const authQuery = graphql.defaults({
-//   headers: {
-//     authorization: `bearer ${process.env.REACT_APP_GH_TOKEN}`,
-//   },
-// });
-
 const AuthQuery = Octokit.plugin(paginateGraphql);
 const authQuery = new AuthQuery({ auth: `bearer ${process.env.REACT_APP_GH_TOKEN}` });
-
 
 /**
  * Attempts to fetch all public repositories owned by the provided user.
@@ -24,24 +17,25 @@ const authQuery = new AuthQuery({ auth: `bearer ${process.env.REACT_APP_GH_TOKEN
  * @param {string} username The GraphQL cursor marking the end of the previous page. Used for paginated queries.
  * @return {Promise<ResponseResult>} Contains a status code and, if the query was successful, the requested respositories.
  */
-export async function fetchRepos(username: string, lastItem?: string): Promise<ResponseResult> {
+export async function fetchRepos(username: string, repoName: string, lang: string, lastItem?: string) : Promise<ResponseResult> {
   const query =
-    `query fetchRepos($_username: String!, $_entriesPerPage: Int!, $cursor: String) {
-      repositoryOwner(login: $_username) {
-      repositories(first: $_entriesPerPage, after: $cursor) {
-        edges {
-          cursor
-          node {
-            id
-            name
-            url
-            isFork
-            languages(first: 10) {
-              edges {
-                node {
-                  id
-                  name
-                }
+    `query searchRepos($searchParams: String!, $entriesPerPage: Int!, $cursor: String) {
+      search(
+        type: REPOSITORY
+        query: $searchParams
+        first: $entriesPerPage
+        after: $cursor
+      ) {
+        repositoryCount
+        repos: edges {
+          repo: node {
+            ... on Repository {
+              id
+              url
+              name
+              isFork
+              language: primaryLanguage {
+                name
               }
             }
           }
@@ -51,18 +45,19 @@ export async function fetchRepos(username: string, lastItem?: string): Promise<R
           hasNextPage
         }
       }
-    }
-  }`
+    }`
 
   const params = {
-    _username: username,
-    _entriesPerPage: ENTRIES_PER_QUERY,
+    searchParams: `${repoName} in:name user:${username} language:${lang} fork:true `,
+    entriesPerPage: ENTRIES_PER_QUERY,
   };
 
   try {
     const response: ResponseData = await authQuery.graphql.paginate(query, params);
 
-    if (response.repositoryOwner && response.repositoryOwner.repositories.edges.length === 0) {
+    // const iterator = response[Symbol.asyncIterator]();
+
+    if (response.search.repositoryCount === 0) {
       return { status: Status.NO_ENTRIES };
     } else {
       return { status: Status.SUCCESS, data: response };

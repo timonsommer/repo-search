@@ -14,7 +14,7 @@ function RepoList({ _repositories }: RepoListProps) {
     return (
         <div className="repo-list">
             {isEmpty ? <div className="repo-list__no-data"><WindIcon/></div> :
-                _repositories.map((repo) => <RepoItem key={repo.id} _repoName={repo.name} _repoLanguages={repo.languages} _repoURL={repo.url} _isFork={repo.isFork} />)}
+                _repositories.map((repo) => <RepoItem key={repo.id} name={repo.name} language={repo.language} url={repo.url} isFork={repo.isFork} />)}
         </div>
     );
 }

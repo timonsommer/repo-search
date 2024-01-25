@@ -1,19 +1,12 @@
-export type Language = string;
-
 export type Repository = {
     id: string,
-    name: string,
-    languages: Language[],
     url: string,
+    name: string,
     isFork: boolean
+    language: string,
 }
 
-export type LanguageOption = [
-    id: Language,
-    name: string
-]
-
 export type Filter = {
-    languageId: Language,
+    language: string,
     repoName: string
 }
