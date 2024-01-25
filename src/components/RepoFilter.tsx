@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { fetchRepos } from '../services/queries';
 import { Status } from '../types/Status';
 import { LanguageOption, Repository, Filter, Language } from '../types/repositoryData';
@@ -50,7 +50,7 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
             if (response.data && response.status === Status.SUCCESS) {
                 const repoData = response.data.result.repoData;
                 const _allLanguages: Map<string, Language> = new Map();
-                const _repositories: Repository[] = repoData.repos.map((repoNode) => repoNode.repo)
+                const _repositories: Repository[] = repoData.edges.map((repoNode) => repoNode.repo)
                     .map((repo) => {
                         const _languages: Language[] = repo.languageData.langs.map((langNode) => {
                             if (!_allLanguages.has(langNode.lang.id))

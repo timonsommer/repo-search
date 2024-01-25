@@ -20,16 +20,16 @@ const authQuery = new AuthQuery({ auth: `bearer ${process.env.REACT_APP_GH_TOKEN
  */
 export async function fetchRepos(username: string): Promise<ResponseResult> {
   const query =
-    `query fetchRepos($username: String!, $entriesPerPage: Int!, $cursor: String) {
+    `query fetchRepos($username: String!, $entriesPerQuery: Int!, $cursor: String) {
       result: user(login: $username) {
         repoData: repositories(
-          first: $entriesPerPage
+          first: $entriesPerQuery
           after: $cursor
           ownerAffiliations: OWNER
           orderBy: {field: UPDATED_AT, direction: DESC}
         ) {
           repoCount: totalCount
-          repos: edges {
+          edges {
             repo: node {
               id
               name
@@ -55,7 +55,7 @@ export async function fetchRepos(username: string): Promise<ResponseResult> {
 
   const params = {
     username: username,
-    entriesPerPage: ENTRIES_PER_QUERY,
+    entriesPerQuery: ENTRIES_PER_QUERY,
   };
 
   try {

@@ -4,7 +4,7 @@ export type ResponseData = {
   result: {
     repoData: {
       repoCount: number
-      repos: {
+      edges: {
         repo: {
           id: string,
           name: string,
