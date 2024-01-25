@@ -5,33 +5,40 @@
 .repo-item {
     display: flex;
     flex-direction: row;
-    align-items: left;
+    align-items: center;
     justify-content: left;
     gap: dimensions.$padding-s;
     width: 100%;
     padding: dimensions.$padding-m;
-    border-bottom: dimensions.$border-inner solid colors.$border-inner;
+    border-bottom: dimensions.$stroke-border solid colors.$border-inner;
     color: black;
     text-decoration: none;
 
-    &__fork-badge {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: colors.$bg-badge;
-        border: dimensions.$border-inner solid colors.$border-inner;
-        border-radius: dimensions.$radius-pill;
-        padding: dimensions.$padding-xxs dimensions.$padding-xs;
-        color: colors.$text-badge;
-        font-size: fonts.$size-s;
-    }
- 
-    &:hover {
-        background-color: colors.$bg-panel;
+    &__title {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 
     &__icon {
         display: flex;
         align-items: center;
     }
+
+    &__fork-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: colors.$bg-badge;
+        border: dimensions.$stroke-border solid colors.$border-inner;
+        border-radius: dimensions.$radius-pill;
+        padding: dimensions.$padding-xxs dimensions.$padding-xs;
+        color: colors.$text-badge;
+        font-size: fonts.$size-s;
+    }
+
+    &:hover {
+        background-color: colors.$bg-panel;
+    }
+
 }

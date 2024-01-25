@@ -8,7 +8,7 @@
     gap: dimensions.$padding-m;
     align-items: left;
     border-radius: dimensions.$radius-m;
-    border: dimensions.$border-inner solid colors.$border-outer;
+    border: dimensions.$stroke-border solid colors.$border-outer;
     padding: dimensions.$padding-m;
     background-color: colors.$bg-panel;
 

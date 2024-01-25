@@ -1,6 +1,6 @@
-@use "./dimensions";
-@use "./fonts";
-@use "./colors";
+@use "dimensions";
+@use "fonts";
+@use "colors";
 
 .icon-input {
     position: relative;
@@ -43,7 +43,7 @@
             font-size: fonts.$size-m;
             padding: dimensions.$padding-s;
             padding-left: calc(dimensions.$icon-size + dimensions.$padding-m * 2);
-            border: dimensions.$border-inner solid colors.$border-inner;
+            border: dimensions.$stroke-border solid colors.$border-inner;
             border-radius: dimensions.$radius-s;
             appearance: none;
         }

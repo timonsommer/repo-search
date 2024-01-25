@@ -2,26 +2,24 @@ import "../styles/RepoItem.scss"
 import { Book as BookIcon } from "react-feather";
 
 type RepoItemProps = {
-    _repoName: string,
-    _repoLanguages: string[],
-    _repoURL: string,
-    _isFork: boolean
+    repoName: string,
+    repoLanguages: string[],
+    repoURL: string,
+    isFork: boolean
 }
 
 
-function RepoItem({ _repoName, _repoLanguages, _repoURL, _isFork }: RepoItemProps) {
+function RepoItem({ repoName, repoLanguages, repoURL, isFork }: RepoItemProps) {
 
     return (
-        <a className="repo-item" target="new" href={_repoURL}>
-            {/* <div> */}
+        <a className="repo-item" target="new" href={repoURL}>
             <div className="repo-item__icon">
                 <BookIcon />
             </div>
-            <h3>
-                {_repoName}
+            <h3 className="repo-item__title">
+                {repoName}
             </h3>
-            {/* </div> */}
-            {_isFork && <div className="repo-item__fork-badge">
+            {isFork && <div className="repo-item__fork-badge">
                 forked
             </div>}
         </a>

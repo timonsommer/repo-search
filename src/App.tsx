@@ -1,18 +1,15 @@
 import './styles/App.scss';
 import RepoFilter from './components/RepoFilter';
-import { UserContextProvider } from './contexts/UserContext';
+import { UserContext } from './contexts/UserContext';
 import SearchBar from './components/SearchBar';
-import { Suspense } from 'react';
+import { useContext } from 'react';
 
 function App() {
+  const { username } = useContext(UserContext);
   return (
     <div className="app">
-      <UserContextProvider>
-        <SearchBar />
-        <Suspense fallback="">
-        <RepoFilter />
-        </Suspense>
-      </UserContextProvider>
+      <SearchBar />
+      {username && <RepoFilter userQuery={username}/>}
     </div>
   );
 }

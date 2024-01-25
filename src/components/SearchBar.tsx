@@ -10,16 +10,16 @@ function SearchBar() {
 
     const handleInput = useDebouncedCallback((e: ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value.trim());
-    }, 400);
+    }, 800);
 
     return (
         <div className="search-bar">
             <div>
-            <h2>GitHub Repository Search</h2>
-            <h4>Find public repositories by username or organization</h4>
+                <h2>GitHub Repository Search</h2>
+                <h3>Find all public repositories a user owns</h3>
             </div>
             <IconInput className="search-bar__input" leftIcon={<UserIcon />}>
-                <input type="search" placeholder="Enter username..." onChange={(e) => handleInput(e)} />
+                <input type="search" placeholder="Enter username" onChange={(e) => handleInput(e)} />
             </IconInput>
         </div>
     );

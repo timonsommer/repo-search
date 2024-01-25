@@ -1,19 +1,18 @@
 import { Status } from "./Status";
 
 export type ResponseData = {
-  repositoryOwner: {
-    repositories: {
-      totalCount: number
-      edges: {
-        cursor: string,
-        node: {
+  result: {
+    repoData: {
+      repoCount: number
+      repos: {
+        repo: {
           id: string,
           name: string,
           url: string,
           isFork: boolean,
-          languages: {
-            edges: {
-              node: {
+          languageData: {
+            langs: {
+              lang: {
                 id: string,
                 name: string
               }
@@ -21,8 +20,8 @@ export type ResponseData = {
           }
         },
         pageInfo: {
-          endCursor: string,
           hasNextPage: boolean,
+          endCursor: string,
         }
       }[],
     }

@@ -2,10 +2,10 @@ import { ReactNode } from "react";
 import "../styles/IconInput.scss";
 
 type IconInputProps = {
-    className?: string;
-    leftIcon: ReactNode;
-    rightIcon?: ReactNode;
-    children: ReactNode;
+    className?: string,
+    leftIcon: ReactNode,
+    rightIcon?: ReactNode,
+    children: ReactNode,
 }
 
 function IconInput({ className, leftIcon, rightIcon, children }: IconInputProps) {

@@ -7,7 +7,7 @@ type PaginationProps = {
 function Pagination({ totalCount }: PaginationProps) {
     return (
         <div className="pagination">
-            {totalCount} {totalCount === 1 ? "repository" : "repositories"} found.
+            {totalCount} {totalCount === 1 ? "result" : "results"}
         </div>
     );
 }

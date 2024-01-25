@@ -1,20 +1,17 @@
 import { Repository } from "../types/repositoryData";
 import RepoItem from "./RepoItem";
 import "../styles/RepoList.scss"
-import { Wind as WindIcon } from "react-feather";
 
 
 type RepoListProps = {
-    _repositories: Repository[];
+    repos: Repository[];
 }
 
 
-function RepoList({ _repositories }: RepoListProps) {
-    const isEmpty: Boolean = _repositories.length === 0;
+function RepoList({ repos }: RepoListProps) {
     return (
         <div className="repo-list">
-            {isEmpty ? <div className="repo-list__no-data"><WindIcon/></div> :
-                _repositories.map((repo) => <RepoItem key={repo.id} _repoName={repo.name} _repoLanguages={repo.languages} _repoURL={repo.url} _isFork={repo.isFork} />)}
+            {repos.map((repo) => <RepoItem key={repo.id} repoName={repo.name} repoLanguages={repo.languages} repoURL={repo.url} isFork={repo.isFork} />)}
         </div>
     );
 }

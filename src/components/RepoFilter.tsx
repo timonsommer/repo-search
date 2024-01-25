@@ -4,23 +4,24 @@ import { Status } from '../types/Status';
 import { LanguageOption, Repository, Filter, Language } from '../types/repositoryData';
 import RepoList from './RepoList';
 import { UserContext } from '../contexts/UserContext';
-import { useDebouncedCallback } from 'use-debounce';
-import { Filter as FilterIcon, Code as CodeIcon, ChevronDown as ChevronDownIcon } from 'react-feather';
+import { Filter as FilterIcon, Code as CodeIcon, ChevronDown as ChevronDownIcon, Loader as LoaderIcon, XSquare as XSquareIcon } from 'react-feather';
 import IconInput from './IconInput';
 import "../styles/RepoFilter.scss";
 import Pagination from './Pagination';
-import AlertCard from './AlertCard';
+import AlertBanner from './AlertBanner';
+import ListStatus from './ListStatus';
 
 const anyLang: LanguageOption = ["any", "Any language"];
 const defaultFilter = { languageId: anyLang[0], repoName: "" };
 
-function RepoFilter() {
-    const { username } = useContext(UserContext);
+type RepoFilterProps = {
+    userQuery: string,
+}
 
-    const [alert, setAlert] = useState<string>("");
+function RepoFilter({ userQuery }: RepoFilterProps) {
+    const [alert, setAlert] = useState<Status | null>(null);
     const [repositories, setRepositories] = useState<Repository[]>([]);
-    const [filteredRepos, setFilteredRepos] = useState<Repository[]>([]);
-    const [itemCount, setItemCount] = useState<number>(0);
+    const [filteredRepos, setFilteredRepos] = useState<Repository[] | null>(null);
     const [filter, setFilter] = useState<Filter>(defaultFilter);
     const [allLanguages, setAllLanguages] = useState<LanguageOption[]>([anyLang]);
 
@@ -31,77 +32,76 @@ function RepoFilter() {
         ));
     }
 
-    const handleNameInput = useDebouncedCallback((e: ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value);
+    const handleNameInput = (e: ChangeEvent<HTMLInputElement>) => {
         setFilter({ repoName: e.target.value.trim(), languageId: filter.languageId });
-    }, 400);
+    };
 
-    const handleLangInput = useDebouncedCallback((e: ChangeEvent<HTMLSelectElement>) => {
-        console.log(e.target.value);
+    const handleLangInput = (e: ChangeEvent<HTMLSelectElement>) => {
         setFilter({ repoName: filter.repoName, languageId: e.target.value });
-    }, 400);
+    };
 
     useEffect(() => {
-        fetchRepos(username).then((response) => {
+        let isSubscribed = true;
+        fetchRepos(userQuery).then((response) => {
             console.log(response);
             if (response.data && response.status === Status.SUCCESS) {
-                const edges = response.data.repositoryOwner.repositories.edges;
+                const repoData = response.data.result.repoData;
                 const _allLanguages: Map<string, Language> = new Map();
-                const _repositories: Repository[] = edges.map((edge) => edge.node).map((node) => {
-                    const _languages: Language[] = node.languages.edges.map((edge) => {
-                        if (!_allLanguages.has(edge.node.id)) _allLanguages.set(edge.node.id, edge.node.name);
-                        return edge.node.id;
+                const _repositories: Repository[] = repoData.repos.map((repoNode) => repoNode.repo)
+                    .map((repo) => {
+                        const _languages: Language[] = repo.languageData.langs.map((langNode) => {
+                            if (!_allLanguages.has(langNode.lang.id))
+                                _allLanguages.set(langNode.lang.id, langNode.lang.name);
+                            return langNode.lang.id;
+                        });
+                        return { id: repo.id, name: repo.name, languages: _languages, url: repo.url, isFork: repo.isFork };
                     });
-                    return { id: node.id, name: node.name, languages: _languages, url: node.url, isFork: node.isFork };
-                });
-                setAllLanguages([anyLang].concat(Array.from(_allLanguages).sort((a, b) => a[1].localeCompare(b[1]))));
-                setRepositories(_repositories);
-                setFilteredRepos(filterRepos(_repositories, filter));
-                setItemCount(filteredRepos.length);
+                if (isSubscribed) {
+                    setAllLanguages([anyLang].concat(Array.from(_allLanguages).sort((a, b) => a[1].localeCompare(b[1]))));
+                    setRepositories(_repositories);
+                    setFilteredRepos(filterRepos(_repositories, filter));
+                }
             } else {
-                setAlert(response.status.toString());
+                setAlert(response.status);
+                setFilteredRepos(null);
             }
-        });
-        return () => {
-            setAllLanguages([anyLang]);
-            setRepositories([]);
-            setFilteredRepos([]);
-            setItemCount(0);
-            setAlert("");
         }
-    },
-        [username]);
+        );
+        return () => {
+            isSubscribed = false;
+            setAlert(null);
+            setFilteredRepos(null);
+            setRepositories([]);
+            setAllLanguages([anyLang]);
+            setFilter(defaultFilter);
+        }
+    }, [userQuery]);
 
     useEffect(() => {
-        const filterBlocking = async () => {
-            setFilteredRepos(filterRepos(repositories, filter));
-            setItemCount(filteredRepos.length);
-            return () => setFilter(defaultFilter);
-        }
-        filterBlocking();
+        setFilteredRepos(filterRepos(repositories, filter));
     }, [filter]);
 
-    let hasNoLangs: boolean = allLanguages.length === 1;
-
     return (
-        <> {alert ? <AlertCard alertType={alert} /> :
-            <div className={`repo-filter${!username ? " faded" : ""}`}>
-                <div className="repo-filter__options">
-                    <IconInput className="repo-filter__options__name" leftIcon={<FilterIcon />}>
-                        <input type="search" onChange={(e) => handleNameInput(e)} placeholder="Filter by repository name" disabled={hasNoLangs} />
-                    </IconInput>
-                    <IconInput className="repo-filter__options__lang" leftIcon={<CodeIcon />} rightIcon={!hasNoLangs && <ChevronDownIcon />}>
-                        <select onChange={(e) => handleLangInput(e)} disabled={hasNoLangs}>
-                            {allLanguages.map((lang) =>
-                                <option key={lang[0]} value={lang[0]}>{lang[1]}</option>
-                            )}
-                        </select>
-                    </IconInput>
+        <> {
+            alert ? <AlertBanner alertType={alert} /> :
+                <div className="repo-filter">
+                    <div className={`repo-filter__options ${!filteredRepos ? "faded" : ""}`}>
+                        <IconInput className="repo-filter__options__name" leftIcon={<FilterIcon />}>
+                            <input type="search" onChange={(e) => handleNameInput(e)} placeholder="Filter by repository name" />
+                        </IconInput>
+                        <IconInput className="repo-filter__options__lang" leftIcon={<CodeIcon />} rightIcon={<ChevronDownIcon />}>
+                            <select onChange={(e) => handleLangInput(e)}>
+                                {allLanguages.map((lang) =>
+                                    <option key={lang[0]} value={lang[0]}>{lang[1]}</option>
+                                )}
+                            </select>
+                        </IconInput>
+                    </div>
+                    {!filteredRepos && <ListStatus statusText="Loading results..." icon={<LoaderIcon />} isSpinning />}
+                    {filteredRepos && filteredRepos.length === 0 && <ListStatus statusText="No matching repositories found." icon={<XSquareIcon />} />}
+                    {filteredRepos && filteredRepos.length !== 0 && <RepoList repos={filteredRepos} />}
+                    <Pagination totalCount={filteredRepos?.length ?? 0} />
                 </div>
-
-                <RepoList _repositories={filteredRepos} />
-                <Pagination totalCount={itemCount} />
-            </div>
         } </>
     );
 }

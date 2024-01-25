@@ -20,14 +20,13 @@ h2 {
 
 h3 {
     font-weight: fonts.$weight-semibold;
-    font-size: fonts.$size-l;
+    font-size: fonts.$size-m;
     margin: 0;
 }
 
-h4 {
-    font-weight: fonts.$default;
-    font-size: fonts.$size-m;
-    margin: 0;
+svg {
+    stroke-width: dimensions.$stroke-icon;
+    color: colors.$stroke-icon;
 }
 
 .app {
@@ -36,7 +35,7 @@ h4 {
     gap: dimensions.$padding-l;
     align-items: center;
     margin: auto;
-    padding: dimensions.$padding-m;
+    padding: dimensions.$padding-xl dimensions.$padding-m;
     max-width: dimensions.$app-width-max;
     min-width: dimensions.$app-width-min;
 }
