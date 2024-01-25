@@ -3,29 +3,29 @@ import { Status } from "./Status";
 export type ResponseData = {
   result: {
     repoData: {
-      repoCount: number
+      repoCount: number;
       edges: {
         repo: {
-          id: string,
-          name: string,
-          url: string,
-          isFork: boolean,
+          id: string;
+          name: string;
+          url: string;
+          isFork: boolean;
           languageData: {
             langs: {
               lang: {
-                id: string,
-                name: string
-              }
-            }[],
-          }
-        },
+                id: string;
+                name: string;
+              };
+            }[];
+          };
+        };
         pageInfo: {
-          hasNextPage: boolean,
-          endCursor: string,
-        }
-      }[],
-    }
-  }
-}
+          hasNextPage: boolean;
+          endCursor: string;
+        };
+      }[];
+    };
+  };
+};
 
-export type ResponseResult = { status: Status, data?: ResponseData }
+export type ResponseResult = { status: Status; data?: ResponseData };

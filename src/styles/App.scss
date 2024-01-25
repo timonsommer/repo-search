@@ -3,54 +3,54 @@
 @use "fonts";
 
 * {
-    font-family: fonts.$default;
-    font-weight: fonts.$weight-regular;
-    font-size: fonts.$size-m;
-    box-sizing: border-box;
+  font-family: fonts.$default;
+  font-weight: fonts.$weight-regular;
+  font-size: fonts.$size-m;
+  box-sizing: border-box;
 }
 
 html {
-    background-color: colors.$bg-page;
+  background-color: colors.$bg-page;
 }
 
 p {
-    font-weight: fonts.$weight-regular;
-    margin: 0;
+  font-weight: fonts.$weight-regular;
+  margin: 0;
 }
 
 h2 {
-    font-weight: fonts.$weight-bold;
-    font-size: fonts.$size-xl;
-    margin: 0;
+  font-weight: fonts.$weight-bold;
+  font-size: fonts.$size-xl;
+  margin: 0;
 }
 
 h3 {
-    font-weight: fonts.$weight-semibold;
-    font-size: fonts.$size-m;
-    margin: 0;
+  font-weight: fonts.$weight-semibold;
+  font-size: fonts.$size-m;
+  margin: 0;
 }
 
 svg {
-    stroke-width: dimensions.$stroke-icon;
-    color: colors.$stroke-icon;
+  stroke-width: dimensions.$stroke-icon;
+  color: colors.$stroke-icon;
 }
 
 li {
-    list-style: none;
+  list-style: none;
 }
 
 ul {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 .app {
-    display: flex;
-    flex-direction: column;
-    gap: dimensions.$padding-l;
-    align-items: center;
-    margin: auto;
-    padding: dimensions.$padding-xl dimensions.$padding-m;
-    max-width: dimensions.$app-width-max;
-    min-width: dimensions.$app-width-min;
+  display: flex;
+  flex-direction: column;
+  gap: dimensions.$padding-l;
+  align-items: center;
+  margin: auto;
+  padding: dimensions.$padding-xl dimensions.$padding-m;
+  max-width: dimensions.$app-width-max;
+  min-width: dimensions.$app-width-min;
 }

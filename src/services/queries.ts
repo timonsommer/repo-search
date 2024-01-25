@@ -8,7 +8,9 @@ const ENTRIES_PER_QUERY = 100;
 export const ENTRIES_PER_PAGE = 10;
 
 const AuthQuery = Octokit.plugin(paginateGraphql);
-const authQuery = new AuthQuery({ auth: `bearer ${process.env.REACT_APP_GH_TOKEN}` });
+const authQuery = new AuthQuery({
+  auth: `bearer ${process.env.REACT_APP_GH_TOKEN}`,
+});
 
 /**
  * Attempts to fetch all public repositories owned by the provided user.
@@ -19,8 +21,7 @@ const authQuery = new AuthQuery({ auth: `bearer ${process.env.REACT_APP_GH_TOKEN
  * @return {Promise<ResponseResult>} Contains a status code and, if the query was successful, the requested respositories.
  */
 export async function fetchRepos(username: string): Promise<ResponseResult> {
-  const query =
-    `query fetchRepos($username: String!, $entriesPerQuery: Int!, $cursor: String) {
+  const query = `query fetchRepos($username: String!, $entriesPerQuery: Int!, $cursor: String) {
       result: user(login: $username) {
         repoData: repositories(
           first: $entriesPerQuery
@@ -51,7 +52,7 @@ export async function fetchRepos(username: string): Promise<ResponseResult> {
           }
         }
       }
-  }`
+  }`;
 
   const params = {
     username: username,
@@ -59,10 +60,13 @@ export async function fetchRepos(username: string): Promise<ResponseResult> {
   };
 
   try {
-    const response: ResponseData = await authQuery.graphql.paginate(query, params);
+    const response: ResponseData = await authQuery.graphql.paginate(
+      query,
+      params,
+    );
 
     // const response: ResponseData = {result: {repoData: {repos: []}}
-    
+
     // for await ( const page of responseIter) {
     //   response.result.repoData.repos.concat
     // }
@@ -74,12 +78,13 @@ export async function fetchRepos(username: string): Promise<ResponseResult> {
     } else {
       return { status: Status.SUCCESS, data: response };
     }
-
   } catch (error: any) {
     console.log(error.message);
 
     if (error instanceof GraphqlResponseError) {
-      if (error.message.includes("Could not resolve to a User with the login of")) {
+      if (
+        error.message.includes("Could not resolve to a User with the login of")
+      ) {
         return { status: Status.UNKNOWN_USER };
       } else {
         return { status: Status.QUERY_ERROR };

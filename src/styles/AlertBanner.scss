@@ -2,18 +2,18 @@
 @use "dimensions";
 
 .alert-banner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    gap: dimensions.$padding-m;
-    width: 100%;
-    padding: dimensions.$padding-l;
-    background-color: colors.$bg-panel;
-    border-radius: dimensions.$radius-m;
-    border: dimensions.$stroke-border solid colors.$border-inner;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: dimensions.$padding-m;
+  width: 100%;
+  padding: dimensions.$padding-l;
+  background-color: colors.$bg-panel;
+  border-radius: dimensions.$radius-m;
+  border: dimensions.$stroke-border solid colors.$border-inner;
 
-    @media screen and (max-width: dimensions.$break-m) {
-        flex-direction: column;
-    }
+  @media screen and (max-width: dimensions.$break-m) {
+    flex-direction: column;
+  }
 }

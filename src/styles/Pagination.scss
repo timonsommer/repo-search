@@ -2,42 +2,40 @@
 @use "dimensions";
 
 .pagination {
-    width: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: dimensions.$padding-s dimensions.$padding-m;
+  padding-right: dimensions.$padding-s;
+  background-color: colors.$bg-panel;
+  color: colors.$text-hint;
+
+  &__more {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
     align-items: center;
-    padding: dimensions.$padding-s dimensions.$padding-m;
-    padding-right: dimensions.$padding-s;
-    background-color: colors.$bg-panel;
+    justify-content: center;
+    gap: dimensions.$padding-xs;
+    padding: dimensions.$padding-xs dimensions.$padding-s;
+    border: none;
+    background: none;
+
     color: colors.$text-hint;
 
-    &__more {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: dimensions.$padding-xs;
-        padding: dimensions.$padding-xs dimensions.$padding-s;
-        border: none;
-        background: none;
+    &:not(:disabled) {
+      cursor: pointer;
 
-        color: colors.$text-hint;
-
-        &:not(:disabled) {
-            cursor: pointer;
-
-            &:hover {
-                border-radius: dimensions.$radius-s;
-                background-color: colors.$bg-badge;
-            }
-        }
-
-        &:disabled {
-            opacity: 0.6;
-            pointer-events: none;
-            user-select: none;
-        }
-
-
+      &:hover {
+        border-radius: dimensions.$radius-s;
+        background-color: colors.$bg-badge;
+      }
     }
+
+    &:disabled {
+      opacity: 0.6;
+      pointer-events: none;
+      user-select: none;
+    }
+  }
 }
