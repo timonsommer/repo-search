@@ -8,6 +8,7 @@ import "../styles/SearchBar.scss";
 function SearchBar() {
   const { setUsername } = useContext(UserContext);
 
+  // debounce to avoid unintentional requests
   const handleInput = useDebouncedCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setUsername(e.target.value.trim());

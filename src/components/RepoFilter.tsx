@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { fetchRepos } from "../services/queries";
 import { Status } from "../types/Status";
 import {
@@ -6,7 +6,7 @@ import {
   Repository,
   Filter,
   Language,
-} from "../types/repositoryData";
+} from "../types/repository";
 import RepoList from "./RepoList";
 import {
   Filter as FilterIcon,
@@ -40,14 +40,22 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
 
   const nextPage = () => setPage(page + 1);
 
+  /**
+   * Filters a repository array according to the provided filter criteria.
+   * @param {Repository[]} repositories The repository array to filter.
+   * @param {Filter} obj The filter object.
+   * @param {string} obj.languageId The language to filter for.
+   * @param {name} obj.repoName The repository name to filter for.
+   * @return {Repository[]} Contains all repositories that match the filter criteria.
+   */
   const filterRepos = (
     repositories: Repository[],
-    { languageId: language, repoName: name }: Filter,
+    { languageId: language, repoName: name }: Filter
   ): Repository[] => {
     return repositories.filter(
       (repo) =>
         repo.name.toLowerCase().includes(name.toLowerCase()) &&
-        (language === anyLang[0] || repo.languages.includes(language)),
+        (language === anyLang[0] || repo.languages.includes(language))
     );
   };
 
@@ -59,13 +67,16 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
   };
 
   const handleLangInput = (e: ChangeEvent<HTMLSelectElement>) => {
-    setFilter({ repoName: filter.repoName, languageId: e.target.value });
+    setFilter({
+      repoName: filter.repoName,
+      languageId: e.target.value,
+    });
   };
 
+  // send request and process response, runs on username change (i.e. on component render)
   useEffect(() => {
     setIsLoading(true);
     fetchRepos(userQuery).then((response) => {
-      console.log(response);
       if (response.data && response.status === Status.SUCCESS) {
         const repoData = response.data.result.repoData;
         const _allLanguages: Map<string, Language> = new Map();
@@ -77,7 +88,7 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
                 if (!_allLanguages.has(langNode.lang.id))
                   _allLanguages.set(langNode.lang.id, langNode.lang.name);
                 return langNode.lang.id;
-              },
+              }
             );
             return {
               id: repo.id,
@@ -89,11 +100,11 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
           });
         setAllLanguages(
           [anyLang].concat(
-            Array.from(_allLanguages).sort((a, b) => a[1].localeCompare(b[1])),
-          ),
+            Array.from(_allLanguages).sort((a, b) => a[1].localeCompare(b[1]))
+          )
         );
         setRepositories(_repositories);
-        setFilteredRepos(filterRepos(_repositories, filter));
+        setFilteredRepos(_repositories);
       } else {
         setAlert(response.status);
       }
@@ -101,6 +112,7 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
     });
   }, []);
 
+  // update repositories according to the set filters
   useEffect(() => {
     setFilteredRepos(filterRepos(repositories, filter));
     return () => {
@@ -110,7 +122,6 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
 
   return (
     <>
-      {" "}
       {alert ? (
         <AlertBanner alertType={alert} />
       ) : (
@@ -160,12 +171,12 @@ function RepoFilter({ userQuery }: RepoFilterProps) {
             totalCount={filteredRepos.length}
             currentCount={Math.min(
               ENTRIES_PER_PAGE * page,
-              filteredRepos.length,
+              filteredRepos.length
             )}
             loadMore={nextPage}
           />
         </div>
-      )}{" "}
+      )}
     </>
   );
 }

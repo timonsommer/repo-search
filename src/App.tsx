@@ -4,6 +4,7 @@ import { UserContext } from "./contexts/UserContext";
 import SearchBar from "./components/SearchBar";
 import { useContext } from "react";
 
+// provide a key to RepoFilter to reset component data on username change
 function App() {
   const { username } = useContext(UserContext);
   return (

@@ -5,6 +5,7 @@ type UserContextState = {
   setUsername: (username: string) => void;
 };
 
+// lift state to facilitate separation of search and filter components
 export const UserContext = createContext<UserContextState>(
   {} as UserContextState,
 );

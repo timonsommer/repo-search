@@ -1,4 +1,4 @@
-import { Repository } from "../types/repositoryData";
+import { Repository } from "../types/repository";
 import RepoItem from "./RepoItem";
 import "../styles/RepoList.scss";
 
