@@ -34,6 +34,6 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 ## Future improvements
 
-- Use server-side filtering and pagination for smaller response payloads and better performance (tradeoff: higher frequency of smaller requests/responses)
+- Use server-side filtering and pagination for smaller response payloads and better performance (tradeoff: higher frequency of smaller requests/responses) ([WIP branch](https://github.com/timonsommer/repo-search/tree/server-filtering))
 - Allow direct page navigation in pagination
 - Use URL query parameters to store pagination and filter data for preserving state across page refreshes
