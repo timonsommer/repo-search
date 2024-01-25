@@ -54,17 +54,20 @@
     "@storybook/addon-essentials": "^7.6.10",
     "@storybook/addon-interactions": "^7.6.10",
     "@storybook/addon-links": "^7.6.10",
+    "@storybook/addon-styling-webpack": "^0.0.6",
     "@storybook/blocks": "^7.6.10",
     "@storybook/preset-create-react-app": "^7.6.10",
     "@storybook/react": "^7.6.10",
     "@storybook/react-webpack5": "^7.6.10",
     "@storybook/test": "^7.6.10",
     "@types/feather-icons": "^4.29.4",
+    "css-loader": "^6.9.1",
     "eslint-plugin-storybook": "^0.6.15",
     "prettier": "^3.2.4",
     "prop-types": "^15.8.1",
     "sass": "^1.70.0",
     "storybook": "^7.6.10",
+    "style-loader": "^3.3.4",
     "webpack": "^5.90.0"
   }
 }

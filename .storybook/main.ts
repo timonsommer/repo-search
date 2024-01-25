@@ -7,6 +7,27 @@ const config: StorybookConfig = {
     "@storybook/addon-essentials",
     "@storybook/preset-create-react-app",
     "@storybook/addon-interactions",
+    "@storybook/addon-styling-webpack",
+    ({
+      name: "@storybook/addon-styling-webpack",
+
+      options: {
+        rules: [{
+      test: /\.css$/,
+      sideEffects: true,
+      use: [
+          require.resolve("style-loader"),
+          {
+              loader: require.resolve("css-loader"),
+              options: {
+                  
+                  
+              },
+          },
+      ],
+    },],
+      }
+    })
   ],
   framework: {
     name: "@storybook/react-webpack5",
